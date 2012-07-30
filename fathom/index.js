@@ -2,7 +2,7 @@ var cuecard = require('cuecard');
 
 cuecard.create({
 	port: 3000,
-	remoteUrl: '/my-remote-url',
+	remoteUrl: '/remote',
 
 	title: 'Getting Closure',
 
