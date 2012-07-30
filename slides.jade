@@ -1,0 +1,356 @@
+.slide.title
+    .content
+        h1 Getting Closure.
+        h2
+          | Mark Dalgleish
+          br
+          | Web Directions Code '12
+          br
+          a(href='http://bit.ly/gettingclosure') bit.ly/gettingclosure
+.slide.title
+  .content
+    h1 A little about me.
+    .profile
+      p.twitter
+        a(href='http://twitter.com/markdalgleish') @markdalgleish
+      p UI Engineer, Aconex
+      p
+        | Slides built with
+        a(href='http://markdalgleish.com/projects/fathom') Fathom.js
+.slide
+  .content
+    h1 Immediately Invoked Function Expressions
+    p
+      | aka IIFE (pronounced "iffy")
+      br
+      | Coined by Ben Alman, @cowboy
+    pre.
+      (function(){
+          
+        // Code goes here...
+        
+      })();          
+.slide
+  .content
+    h1 "Immediately Invoked"?
+    p
+      | The function expression is called once as soon as it is evaluated and never run again.
+    pre.
+      (function(){
+          
+        // Any code in this function
+        // is run immediately
+        
+      })(); //<-- Brackets invoke the function          
+.slide
+  .content
+    h1 "Function Expression"?
+    p There are two ways of defining functions:
+    pre.
+      // Function declaration:
+      function foo() {  }
+      
+      // Function expression:
+      var foo = function() {  };
+                
+.slide
+  .content
+    h1 Why is the difference so important?
+    p You can only immediately invoke function expressions, not function declarations.
+    pre.
+      // This is NOT valid syntax:
+      function() { /* ... */ }();
+      
+      // The parentheses around the function
+      // turn it into a function expression
+      (function() { /* ... */ })();
+                
+.slide
+  .content
+    h1 Do we always need the parentheses?
+    pre.
+      // Function expressions don't need them...
+      var foo = function() { /* ... */ }();
+                
+    p However, this is the preferred syntax:
+    pre.
+      var foo = (function() { /* ... */ })();
+                
+    p The parentheses help indicate that it's an IIFE.
+.slide
+  .content
+    h1 Turning declarations into expressions
+    p
+      | Although parentheses are the preferred method, any of the following will also work.
+    pre.
+      !function() { /* ... */ }();
+      +function() { /* ... */ }();
+      -function() { /* ... */ }();
+      ~function() { /* ... */ }();
+      new function() { /* ... */ };
+      new function(arg) { /* ... */ }(arg);
+                
+.slide
+  .content
+    h1 IIFEs in the wild: jQuery
+    p First and last lines of the jQuery source:
+    pre.
+      (function( window, undefined ) {
+          
+        // Snip...
+        
+      })( window );          
+    p Notice var called 'undefined', which is undefined.
+.slide
+  .content
+    h1 IIFEs in the wild: jQuery Plugins
+    p
+      | Seal your code in a new scope, alias the global
+      em jQuery
+      | function as
+      em $
+      | :
+    pre.
+      (function( $ ) {
+          
+        // Snip...
+        
+      })( jQuery );          
+.slide
+  .content
+    h1 IIFEs in the wild: Backbone.js
+    p First and last lines of the Backbone.js source:
+    pre.
+      (function(){
+          
+        // Snip...
+        
+      }).call(this);          
+    p Notice Backbone.js uses the 'call' syntax variation.
+.slide
+  .content
+    h1 IIFEs in the wild: CoffeeScript
+    p
+      | First and last lines of any script compiled from CoffeeScript using default settings:
+    pre.
+      (function() {
+          
+        // Snip...
+        
+      }).call(this);          
+.slide
+  .content
+    h1 IIFEs in the wild: requestAnimationFrame
+    p Animation loop which runs immediately and calls itself again once completed.
+    pre.
+      (function animloop(){
+        window.requestAnimationFrame(animloop);
+        render();
+      })();          
+.slide
+  .content
+    h1 Protect against unwanted globals
+    pre.
+      /* lib.js */
+      (function() {
+        window.public = 'foo';
+        var private = 'bar';
+      })();
+      
+      /* script.js */
+      public; // 'foo'
+      private; // undefined          
+.slide
+  .content
+    h1 Compute & return a value in one statement
+    p Returning from an IIFE evaluates to a single value:
+    pre.
+      var browser = {
+        vendorPrefix: (function(){
+          var prefix;
+          // Detect vendor prefix...
+          return prefix;
+        })()
+      };
+                
+.slide
+  .content
+    h1 Create a "class" in one statement
+    pre.
+      var MyClass = (function(){
+        function MyClass(foo) {
+          this.foo = foo;
+        }
+        MyClass.prototype = {
+          bar: 'baz'
+        };
+        return MyClass;
+      })();
+                
+.slide
+  .content
+    h1 CoffeeScript classes use IIFEs:
+    pre.
+      class Foo //Compiles to:
+                
+    pre.
+      var Foo;
+      Foo = (function() {
+        Foo.name = 'Foo';
+        function Foo() {}
+        return Foo;
+      })();
+                
+.slide
+  .content
+    h1 Emulate block scope
+    pre.
+        for (var i = 1; i <= 3; i++) {
+          (function(i){
+            // All variables (including i)
+            // are now scoped to this block
+            
+            // On click, alerts '1', '2' and '3'
+            $elem.click(function() { alert(i); });
+          })(i);
+        }
+
+.slide
+  .content
+    h1 Why pass 'i' to the for-loop IIFE?
+    p
+      | Javascript has lexical (function) scope, so
+      em i
+      | is shared by all functions created in this loop.
+    p
+      | The IIFE locks in
+      em i
+      | 's value, otherwise we get this:
+    pre.
+        for (var i = 1; i <= 3; i++) {  
+          // On click, alerts '4', '4' and '4' :(
+          $elem.click(function() { alert(i); });
+        }
+.slide
+  .content
+    h1 CoffeeScript's "do" === instant IIFE
+    pre.
+      do (i)
+        console.log i
+    p Compiles to:
+    pre.
+      (function(i) {
+        return console.log(i);
+      })(i);
+                
+.slide
+  .content
+    h1 Create private variables
+    p
+      | The revealing module pattern (
+      em 'num'
+      | is private):
+    pre.
+      var number = (function(){
+        var num = 0,
+            add = function(n) { num = num + n; },
+            get = function() { return num; };
+        
+        return { add: add, get: get };
+      })();
+                
+.slide
+  .content
+    h1 Create private functions
+    pre.
+      var foo = (function(){
+        var priv = function() { alert('Hi!'); },
+            publ = function() { priv(); };
+        
+        return publ;
+      })();
+                
+    p
+      em 'foo'
+      | is now a function that calls the private
+      em 'priv'
+      | function (available via a closure).
+.slide
+  .content
+    h1 IIFE !== Closure.... so what is a closure?
+    p
+      | A closure is created when a function is returned from another function, retaining its original scope.
+    pre.
+      var foo = (function() {
+        var bar = 'baz';
+        return function() { return bar; };
+      })();
+      foo(); // Returns the value of 'bar'
+      bar; // Undefined, out of scope
+                
+.slide
+  .content
+    h1 Using closures to fix lack of block scope:
+    pre.
+        function makeAlert(i) {
+          return function() {
+            alert(i)
+          }
+        }
+        for (var i = 1; i <= 3; i++) {  
+          // On click, alerts '1', '2' and '3' :D
+          $elem.click(makeAlert(i));
+        }
+.slide
+  .content
+    h1 IIFE !== Self-Executing Anonymous Function
+    p What IIFEs used to be called (mistakenly).
+    p Why is this term incorrect?
+    ul
+      li IIFEs don't execute themselves, they are invoked like any other function.
+      li
+        | They don't have to be anonymous, it's only important that they're function expressions.
+.slide
+  .content
+    h1 A Real Self-Executing Anonymous Function
+    p This anonymous function literally executes itself:
+    pre.
+      var foo = function() {
+        if (arguments.callee.caller ===
+            arguments.callee) {
+          return; // ...if foo called foo
+        }
+        arguments.callee(); // <- Self-execute
+      };
+                
+.slide
+  .content
+    h1 ES5 Strict and Named Function Expressions
+    p
+      | In ECMAScript 5,
+      em 'arguments.callee'
+      | is deprecated in favour of using named function expressions:
+    pre.
+      var foo = function bar() {
+        if (bar.caller === bar) {
+          return;
+        }
+        bar();
+      };
+                
+.slide
+  .content
+    h1 Wrapping up: Why are IIFEs useful?
+    ul
+      li Used to seal code inside a new scope and prevent unwanted global variables.
+      li
+        | Allow you to compute and return a value (e.g. "classes") where only one statement is allowed.
+      li Required to emulate block scope (pre ES6's 'let').
+      li Useful in creating private functions and variables using closures.
+.slide.title
+  .content
+    h1 Thanks for watching.
+    .profile
+      p
+        | Slides: 
+        a(href='http://bit.ly/gettingclosure') bit.ly/gettingclosure
