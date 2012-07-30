@@ -1,9 +1,9 @@
 var cuecard = require('cuecard');
 
-cuecard.configure({
+cuecard.create({
+	port: 3000,
+	remoteUrl: '/my-remote-url',
 	title: 'Getting Closure',
 	html: __dirname + '/slides.html',
 	css: __dirname + '/slides.css'
 });
-
-cuecard.server.listen(3000);
