@@ -1,1 +1,3 @@
-console.log('TODO: Everything');
+var cuecard = require('cuecard');
+
+cuecard.server.listen(3000);
