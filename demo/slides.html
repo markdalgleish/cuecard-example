@@ -10,9 +10,8 @@
 			<h2>The problem</h2>
 			<ul>
 				<li>Browser-based presentations are awesome.</li>
-				<li>Hovering over your laptop isn't always awesome.</li>
+				<li>Hunching over your laptop <em>isn't</em> awesome.</li>
 				<li>Remotes force you to turn around to see your slides.</li>
-				<li>No notes or custom buttons...</li>
 			</ul>
 		</section>
 
@@ -39,17 +38,15 @@
 			<h2>The solution</h2>
 			<p>Cuecard!</p>
 			<ul>
-				<li>Use any browser as your remote.</li>
-				<li>Plugs into any framework with a simple adapter.</li>
+				<li>Use a tablet as your remote.</li>
+				<li>Drive any framework with a simple adapter.</li>
 				<li>Presenter view allows for custom styles and markup.</li>
 				<li>Minimises boilerplate, only slide markup required.</li>
 			</ul>
 		</section>
 
 		<section>
-			<h2>Simple setup</h2>
-
-			<p>Install from npm:<br />npm install cuecard (not published yet)<br /><br /></p>
+			<h2>Simple server.js</h2>
 
 			<pre>
 var cuecard = require('cuecard');
@@ -57,11 +54,30 @@ var cuecard = require('cuecard');
 cuecard.create({
     port: 3000,
     remoteUrl: '/remote',
+
     adapter: 'reveal',
     title: 'My Cuecard Presentation',
     slides: __dirname + '/slides.html',
     styles: __dirname + '/slides.css'
 });
+			</pre>
+		</section>
+
+		<section>
+			<h2>Sample Slide Markup</h2>
+
+			<p>Writing slides is super simple.<br /><br /></p>
+
+			<pre>
+&lt;section&gt;
+  &lt;h2&gt;Sample Slide Markup&lt;/h2&gt;
+
+  &lt;p&gt;Writing slides is super simple.&lt;/p&gt;
+
+  &lt;pre&gt;
+    INCEPTION
+  &lt;/pre&gt;
+&lt;/section&gt;
 			</pre>
 		</section>
 
@@ -82,27 +98,20 @@ cuecard.create({
 		</section>
 
 		<section>
-			<h2>More frameworks...</h2>
-			<p>Let's have a quick look at Fathom.js</p>
-		</section>
-
-		<section>
 			<h2>Under the hood</h2>
 			<ul>
 				<li>Runs on Node.js</li>
 				<li>WebSockets via Socket.io for real-time goodness</li>
 				<li>Grunt for linting and testing</li>
-				<li>Travis CI for continuous testing</li>
 			</ul>
 		</section>
 
 		<section>
 			<h2>More goodies to come</h2>
 			<ul>
-				<li>Presenter Notes</li>
-				<li>Command line tool to build presentation boilerplate</li>
-				<li>Show preview of next slide</li>
+				<li>Presenter notes</li>
 				<li>Stopwatch (so you don't ramble, like me)</li>
+				<li>Command line tool to create presentation boilerplate</li>
 			</ul>
 		</section>
 

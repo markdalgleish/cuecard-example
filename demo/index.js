@@ -6,7 +6,7 @@ cuecard.create({
 	port: 3000,
 	remoteUrl: '/remote',
 
-	title: 'Reveal.js',
+	title: 'Cuecard',
 
 	slides: __dirname + '/slides.html',
 	styles: __dirname + '/slides.css'
